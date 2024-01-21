@@ -18,9 +18,9 @@ namespace Selu383.SP24.Api.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<HotelDTO>> GetHotels()
+        public ActionResult<List<HotelDTO>> ListAllHotels()
         {
-            var hotels = _context.Hotel
+            var resultDto = _context.Hotel
                 .Select(hotel => new HotelDTO
                 {
                     Id = hotel.Id,
@@ -29,87 +29,86 @@ namespace Selu383.SP24.Api.Controllers
                 })
                 .ToList();
 
-            return hotels;
-        }
-
-        [HttpPost]
-        public ActionResult<HotelDTO> AddHotel([FromBody] CreateHotelDTO hotelDTO)
-        {
-            try
-            {
-                if (hotelDTO == null)
-                {
-                    return BadRequest("Invalid hotel data.");
-                }
-                if (hotelDTO.Address == null)
-                {
-                    return BadRequest("Invalid hotel data.");
-                }
-                var newHotel = new Hotel
-                {
-                    Name = hotelDTO.Name,
-                    Address = hotelDTO.Address
-                    // Add other properties as needed
-                };
-
-                _context.Hotel.Add(newHotel);
-                _context.SaveChanges();
-
-                // You can return the added hotel or a confirmation message
-                return CreatedAtAction(nameof(AddHotel), new { id = newHotel.Id }, newHotel);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception
-                // Return a meaningful error response
-                return StatusCode(500, "Internal Server Error");
-            }
+            return resultDto;
         }
 
         [HttpGet("{id}")]
         public ActionResult<HotelDTO> GetHotelById(int id)
         {
-            var hotel = _context.Hotel.Find(id);
-
-            if (hotel == null)
+            var hotelDto = _context.Hotel.Where(h => h.Id == id).FirstOrDefault();
+            if(hotelDto == null)
             {
-                return NotFound("Hotel not found.");
+                return NotFound();
+            }
+            return Ok(hotelDto);
+        }
+
+        [HttpPost]
+        public ActionResult<HotelDTO> CreateHotel(CreateHotelDTO createRequest)
+        {
+            if (string.IsNullOrEmpty(createRequest.Name) || createRequest.Name.Length > 120)
+            {
+                return BadRequest("Name must be provided and cannot be longer than 120 characters.");
             }
 
-            var hotelDTO = new HotelDTO
+            if (string.IsNullOrEmpty(createRequest.Address))
             {
-                Id = hotel.Id,
-                Name = hotel.Name,
-                Address = hotel.Address
-                // Add other properties as needed
+                return BadRequest("Must have an address.");
+            }
+
+            var newHotel = new Hotel
+            {
+                Name = createRequest.Name,
+                Address = createRequest.Address
             };
 
-            return Ok(hotelDTO);
-        }
-        [HttpPut("{id}")]
-        public ActionResult<HotelDTO> UpdateHotel(int id, [FromBody] HotelDTO hotelDTO)
-        {
-            if (hotelDTO == null || id != hotelDTO.Id)
-            {
-                return BadRequest("Invalid hotel data or mismatched IDs.");
-            }
+            _context.Hotel.Add(newHotel);
+            _context.SaveChanges();
 
+            var createdDto = new HotelDTO
+            {
+                Id = newHotel.Id,
+                Name = newHotel.Name,
+                Address = newHotel.Address
+            };
+
+            return CreatedAtAction(nameof(GetHotelById), new { id = createdDto.Id }, createdDto);
+        }
+
+
+        [HttpPut("{id}")]
+        public ActionResult<HotelDTO> UpdateHotel(int id, CreateHotelDTO updateRequest)
+        {
             var existingHotel = _context.Hotel.Find(id);
 
             if (existingHotel == null)
             {
-                return NotFound("Hotel not found.");
+                return NotFound(); 
             }
 
-            // Update the existing hotel properties
-            existingHotel.Name = hotelDTO.Name;
-            existingHotel.Address = hotelDTO.Address;
-            // Update other properties as needed
+            if (string.IsNullOrEmpty(updateRequest.Name) || updateRequest.Name.Length > 120)
+            {
+                return BadRequest("Name must be provided and cannot be longer than 120 characters.");
+            }
+
+            if (string.IsNullOrEmpty(updateRequest.Address))
+            {
+                return BadRequest("Must have an address.");
+            }
+
+            existingHotel.Name = updateRequest.Name;
+            existingHotel.Address = updateRequest.Address;
 
             _context.SaveChanges();
 
-            // You can return the updated hotel or a confirmation message
-            return Ok(existingHotel);
+            var updatedDto = new HotelDTO
+            {
+                Id = existingHotel.Id,
+                Name = existingHotel.Name,
+                Address = existingHotel.Address
+            };
+
+            return Ok(updatedDto);
         }
 
 

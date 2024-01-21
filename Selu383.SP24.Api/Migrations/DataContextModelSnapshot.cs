@@ -34,11 +34,26 @@ namespace Selu383.SP24.Api.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Hotel");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 5,
+                            Address = "Location A",
+                            Name = "Hotel A"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Address = "Location B",
+                            Name = "Hotel B"
+                        });
                 });
 #pragma warning restore 612, 618
         }
