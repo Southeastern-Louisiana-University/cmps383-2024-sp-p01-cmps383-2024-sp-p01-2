@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using FluentAssertions;
-using Selu383.SP24.Tests.Dtos;
+using Selu383.SP24.Api.DataTransferObjects;
 using Selu383.SP24.Tests.Helpers;
 
 namespace Selu383.SP24.Tests.Controllers;
@@ -52,7 +52,7 @@ public class HotelsControllerTests
 
         //assert
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK, "we expect an HTTP 200 when calling GET /api/hotels/{id} ");
-        var resultDto = await httpResponse.Content.ReadAsJsonAsync<HotelDto>();
+        var resultDto = await httpResponse.Content.ReadAsJsonAsync<HotelDTO>();
         resultDto.Should().BeEquivalentTo(target, "we expect get product by id to return the same data as the list all product endpoint");
     }
 
@@ -74,7 +74,7 @@ public class HotelsControllerTests
     {
         //arrange
         var webClient = context.GetStandardWebClient();
-        var request = new HotelDto
+        var request = new HotelDTO
         {
             Address = "asd",
         };
@@ -91,7 +91,7 @@ public class HotelsControllerTests
     {
         //arrange
         var webClient = context.GetStandardWebClient();
-        var request = new HotelDto
+        var request = new HotelDTO
         {
             Name = "a".PadLeft(121, '0'),
             Address = "asd",
@@ -115,7 +115,7 @@ public class HotelsControllerTests
             Assert.Fail("You are not ready for this test");
             return;
         }
-        var request = new HotelDto
+        var request = new HotelDTO
         {
             Name = "asd",
         };
@@ -132,7 +132,7 @@ public class HotelsControllerTests
     {
         //arrange
         var webClient = context.GetStandardWebClient();
-        var request = new HotelDto
+        var request = new HotelDTO
         {
             Name = "a",
             Address = "asd",
@@ -150,7 +150,7 @@ public class HotelsControllerTests
     {
         //arrange
         var webClient = context.GetStandardWebClient();
-        var request = new HotelDto
+        var request = new HotelDTO
         {
             Name = "a",
             Address = "desc",
@@ -175,7 +175,7 @@ public class HotelsControllerTests
     {
         //arrange
         var webClient = context.GetStandardWebClient();
-        var request = new HotelDto
+        var request = new HotelDTO
         {
             Name = "a",
             Address = "desc",
@@ -200,7 +200,7 @@ public class HotelsControllerTests
     {
         //arrange
         var webClient = context.GetStandardWebClient();
-        var request = new HotelDto
+        var request = new HotelDTO
         {
             Name = "a",
             Address = "desc",
@@ -225,7 +225,7 @@ public class HotelsControllerTests
     {
         //arrange
         var webClient = context.GetStandardWebClient();
-        var request = new HotelDto
+        var request = new HotelDTO
         {
             Name = "a",
             Address = "desc",
@@ -250,7 +250,7 @@ public class HotelsControllerTests
     {
         //arrange
         var webClient = context.GetStandardWebClient();
-        var request = new HotelDto
+        var request = new HotelDTO
         {
             Address = "asd",
             Name = "asd"
@@ -274,7 +274,7 @@ public class HotelsControllerTests
     {
         //arrange
         var webClient = context.GetStandardWebClient();
-        var request = new HotelDto
+        var request = new HotelDTO
         {
             Address = "asd",
             Name = "asd",
@@ -298,7 +298,7 @@ public class HotelsControllerTests
     {
         //arrange
         var webClient = context.GetStandardWebClient();
-        var request = new HotelDto
+        var request = new HotelDTO
         {
             Address = "asd",
             Name = "asd",
