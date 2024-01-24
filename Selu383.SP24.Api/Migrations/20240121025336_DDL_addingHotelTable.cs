@@ -23,6 +23,10 @@ namespace Selu383.SP24.Api.Migrations
                 {
                     table.PrimaryKey("PK_Hotel", x => x.Id);
                 });
+
+            migrationBuilder.Sql("INSERT INTO Hotel (Name, Address)\r\nVALUES\r\n  ('Hotel A', 'Location A'),\r\n  ('Hotel B', 'Location B'),\r\n  ('Hotel C', 'Location C');");
+
+
         }
 
         /// <inheritdoc />

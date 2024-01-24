@@ -5,24 +5,25 @@ public class DataContext : DbContext
 {
     public DbSet<Hotel> Hotel { get; set; }
 
+    public void SeedData()
+    {
+        if (Hotel.Any())
+        {
+            Hotel.AddRange(
+                new Hotel {  Name = "Hotel A", Address = "Location A" },
+                new Hotel { Name = "Hotel B", Address = "Location B" },
+                new Hotel { Name = "Hotel C", Address = "Location C" }
+                // Add more hotels as needed
+            );
+
+            SaveChanges();
+        }
+    }
+
     public DataContext(DbContextOptions<DataContext> options)
-    : base(options)
+   : base(options)
     {
 
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        // Seed data for the Hotel entity
-        modelBuilder.Entity<Hotel>().HasData(
-            new Hotel { Id = 5, Name = "Hotel A", Address = "Location A" },
-            new Hotel { Id = 6, Name = "Hotel B", Address = "Location B" }
-            // Add more hotels as needed
-        );
-
-        // You can seed data for other entities in a similar manner if needed
-        
-        base.OnModelCreating(modelBuilder);
-    }
-    
 }

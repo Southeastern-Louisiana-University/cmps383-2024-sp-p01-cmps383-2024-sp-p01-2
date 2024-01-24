@@ -16,10 +16,13 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 var app = builder.Build();
 
+
+
 using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
 {
     var context = serviceScope.ServiceProvider.GetService<DataContext>();
     context.Database.Migrate();
+    context.SeedData();
 }
 
 // Configure the HTTP request pipeline.

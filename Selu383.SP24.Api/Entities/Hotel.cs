@@ -7,8 +7,8 @@ namespace Selu383.SP24.Api.Entity
         public int Id { get; set; }
         [Required]
         [MaxLength(120)]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         [Required]
-        public string Address { get; set; }
+        public string Address { get; set; } = string.Empty;
     }
 }

@@ -5,7 +5,7 @@ using Selu383.SP24.Api.Entity;
 namespace Selu383.SP24.Api.Controllers
 {
     [ApiController]
-    [Route("api/hotels")]
+    [Route("/api/hotels")]
     public class HotelController : ControllerBase
     {
         private readonly ILogger<HotelController> _logger;
@@ -21,14 +21,16 @@ namespace Selu383.SP24.Api.Controllers
         public ActionResult<List<HotelDTO>> ListAllHotels()
         {
             var resultDto = _context.Hotel
-                .Select(hotel => new HotelDTO
+                .Select(h => new HotelDTO
                 {
-                    Id = hotel.Id,
-                    Name = hotel.Name,
-                    Address = hotel.Address
+                    Id = h.Id,
+                    Name = h.Name,
+                    Address = h.Address
                 })
                 .ToList();
 
+       
+              
             return resultDto;
         }
 
