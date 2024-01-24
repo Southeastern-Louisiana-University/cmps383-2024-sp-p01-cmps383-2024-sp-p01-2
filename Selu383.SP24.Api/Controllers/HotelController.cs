@@ -120,6 +120,7 @@ namespace Selu383.SP24.Api.Controllers
             var hotelToDelete = _context.Hotel.Find(id);
             if (hotelToDelete == null)
             {
+
                 return NotFound();
             }
 
