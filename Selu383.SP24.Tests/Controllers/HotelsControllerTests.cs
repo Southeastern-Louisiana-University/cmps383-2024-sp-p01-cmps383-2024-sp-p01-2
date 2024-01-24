@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using FluentAssertions;
-using Selu383.SP24.Api.DataTransferObjects;
+using Selu383.SP24.Api.Entity;
 using Selu383.SP24.Tests.Helpers;
 
 namespace Selu383.SP24.Tests.Controllers;

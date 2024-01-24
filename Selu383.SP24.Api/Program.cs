@@ -13,16 +13,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DataContext")));
 
-
 var app = builder.Build();
-
-
 
 using (var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
 {
     var context = serviceScope.ServiceProvider.GetService<DataContext>();
-    context.Database.Migrate();
-    context.SeedData();
+    context?.Database.Migrate();
+    context?.SeedData();
 }
 
 // Configure the HTTP request pipeline.

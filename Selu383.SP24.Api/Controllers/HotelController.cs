@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Selu383.SP24.Api.DataTransferObjects;
+using Microsoft.EntityFrameworkCore;
 using Selu383.SP24.Api.Entity;
+using System.Net;
 
 namespace Selu383.SP24.Api.Controllers
 {
     [ApiController]
-    [Route("/api/hotels")]
+    [Route("api/hotels")]
     public class HotelController : ControllerBase
     {
         private readonly ILogger<HotelController> _logger;
@@ -18,27 +19,25 @@ namespace Selu383.SP24.Api.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<HotelDTO>> ListAllHotels()
+        public async Task<ActionResult<List<HotelDTO>>> ListAllHotels()
         {
-            var resultDto = _context.Hotel
+            var resultDto = await _context.Hotel
                 .Select(h => new HotelDTO
                 {
                     Id = h.Id,
                     Name = h.Name,
                     Address = h.Address
                 })
-                .ToList();
+                .ToListAsync();
 
-       
-              
             return resultDto;
         }
 
         [HttpGet("{id}")]
         public ActionResult<HotelDTO> GetHotelById(int id)
         {
-            var hotelDto = _context.Hotel.Where(h => h.Id == id).FirstOrDefault();
-            if(hotelDto == null)
+            var hotelDto = _context.Hotel?.Where(h => h.Id == id).FirstOrDefault();
+            if (hotelDto == null)
             {
                 return NotFound();
             }
@@ -73,6 +72,7 @@ namespace Selu383.SP24.Api.Controllers
                 Name = newHotel.Name,
                 Address = newHotel.Address
             };
+
 
             return CreatedAtAction(nameof(GetHotelById), new { id = createdDto.Id }, createdDto);
         }
