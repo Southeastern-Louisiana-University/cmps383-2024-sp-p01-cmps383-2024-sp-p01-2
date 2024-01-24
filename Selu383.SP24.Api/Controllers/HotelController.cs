@@ -113,6 +113,21 @@ namespace Selu383.SP24.Api.Controllers
             return Ok(updatedDto);
         }
 
+        [HttpDelete("{id}")]
+
+        public ActionResult DeleteHotel(int id)
+        {
+            var hotelToDelete = _context.Hotel.Find(id);
+            if (hotelToDelete == null)
+            {
+                return NotFound();
+            }
+
+            _context.Hotel.Remove(hotelToDelete);
+            _context.SaveChanges();
+
+            return Ok();
+        }
 
     }
 }
