@@ -21,7 +21,7 @@ namespace Selu383.SP24.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<HotelDTO>>> ListAllHotels()
         {
-            var resultDto = await _context.Hotel
+            var resultDto = await _context.Hotel    
                 .Select(h => new HotelDTO
                 {
                     Id = h.Id,
@@ -127,7 +127,12 @@ namespace Selu383.SP24.Api.Controllers
             _context.Hotel.Remove(hotelToDelete);
             _context.SaveChanges();
 
-            return Ok();
+            return Ok(new HotelDTO
+            {
+                Id =hotelToDelete.Id,
+                Name = hotelToDelete.Name,
+                Address = hotelToDelete.Address
+            });
         }
 
     }

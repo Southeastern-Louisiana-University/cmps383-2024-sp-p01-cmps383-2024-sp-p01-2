@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Selu383.SP24.Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240121025336_DDL_addingHotelTable")]
-    partial class DDL_addingHotelTable
+    [Migration("20240125003250_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,12 +37,32 @@ namespace Selu383.SP24.Api.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("nvarchar(120)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Hotel");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "123456 road",
+                            Name = "Test"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Address = "123456 road",
+                            Name = "Test"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Address = "123456 road",
+                            Name = "Test"
+                        });
                 });
 #pragma warning restore 612, 618
         }

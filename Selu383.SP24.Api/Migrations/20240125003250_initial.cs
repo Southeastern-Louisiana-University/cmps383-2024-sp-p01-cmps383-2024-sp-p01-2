@@ -2,10 +2,12 @@
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Selu383.SP24.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class DDL_addingHotelTable : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,7 +18,7 @@ namespace Selu383.SP24.Api.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -24,9 +26,15 @@ namespace Selu383.SP24.Api.Migrations
                     table.PrimaryKey("PK_Hotel", x => x.Id);
                 });
 
-            migrationBuilder.Sql("INSERT INTO Hotel (Name, Address)\r\nVALUES\r\n  ('Hotel A', 'Location A'),\r\n  ('Hotel B', 'Location B'),\r\n  ('Hotel C', 'Location C');");
-
-
+            migrationBuilder.InsertData(
+                table: "Hotel",
+                columns: new[] { "Id", "Address", "Name" },
+                values: new object[,]
+                {
+                    { 1, "123456 road", "Test" },
+                    { 2, "123456 road", "Test" },
+                    { 3, "123456 road", "Test" }
+                });
         }
 
         /// <inheritdoc />
