@@ -1,13 +1,13 @@
 ﻿using System.Net;
 using FluentAssertions;
-using Selu383.SP24.Tests.Dtos;
+using Selu383.SP24.Api.Entity;
 using Selu383.SP24.Tests.Helpers;
 
 namespace Selu383.SP24.Tests.Controllers;
 
 internal static class HotelsHelpers
 {
-    internal static async Task<IAsyncDisposable?> CreateHotel(this HttpClient webClient, HotelDto request)
+    internal static async Task<IAsyncDisposable?> CreateHotel(this HttpClient webClient, HotelDTO request)
     {
         try
         {
@@ -22,7 +22,7 @@ internal static class HotelsHelpers
         }
     }
 
-    internal static async Task<List<HotelDto>?> GetHotels(this HttpClient webClient)
+    internal static async Task<List<HotelDTO>?> GetHotels(this HttpClient webClient)
     {
         try
         {
@@ -36,7 +36,7 @@ internal static class HotelsHelpers
         }
     }
 
-    internal static async Task<HotelDto?> GetHotel(this HttpClient webClient)
+    internal static async Task<HotelDTO?> GetHotel(this HttpClient webClient)
     {
         try
         {
@@ -50,15 +50,15 @@ internal static class HotelsHelpers
         }
     }
 
-    internal static async Task AssertHotelUpdateFunctions(this HttpResponseMessage httpResponse, HotelDto request, HttpClient webClient)
+    internal static async Task AssertHotelUpdateFunctions(this HttpResponseMessage httpResponse, HotelDTO request, HttpClient webClient)
     {
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK, "we expect an HTTP 200 when calling PUT /api/hotels/{id} with valid data to update a hotel");
-        var resultDto = await httpResponse.Content.ReadAsJsonAsync<HotelDto>();
+        var resultDto = await httpResponse.Content.ReadAsJsonAsync<HotelDTO>();
         resultDto.Should().BeEquivalentTo(request, "We expect the update hotel endpoint to return the result");
 
         var getByIdResult = await webClient.GetAsync($"/api/hotels/{request.Id}");
         getByIdResult.StatusCode.Should().Be(HttpStatusCode.OK, "we should be able to get the updated hotel by id");
-        var dtoById = await getByIdResult.Content.ReadAsJsonAsync<HotelDto>();
+        var dtoById = await getByIdResult.Content.ReadAsJsonAsync<HotelDTO>();
         dtoById.Should().BeEquivalentTo(request, "we expect the same result to be returned by an update hotel call as what you'd get from get hotel by id");
 
         var getAllRequest = await webClient.GetAsync("/api/hotels");
@@ -71,11 +71,11 @@ internal static class HotelsHelpers
         matchingItem[0].Should().BeEquivalentTo(request, "we expect the same result to be returned by a updated hotel as what you'd get from get getting all hotels");
     }
 
-    internal static async Task<HotelDto> AssertCreateHotelFunctions(this HttpResponseMessage httpResponse, HotelDto request, HttpClient webClient)
+    internal static async Task<HotelDTO> AssertCreateHotelFunctions(this HttpResponseMessage httpResponse, HotelDTO  request, HttpClient webClient)
     {
         httpResponse.StatusCode.Should().Be(HttpStatusCode.Created, "we expect an HTTP 201 when calling POST /api/hotels with valid data to create a new hotel");
 
-        var resultDto = await httpResponse.Content.ReadAsJsonAsync<HotelDto>();
+        var resultDto = await httpResponse.Content.ReadAsJsonAsync<HotelDTO>();
         Assert.IsNotNull(resultDto, "We expect json data when calling POST /api/hotels");
 
         resultDto.Id.Should().BeGreaterOrEqualTo(1, "we expect a newly created hotel to return with a positive Id");
@@ -86,7 +86,7 @@ internal static class HotelsHelpers
 
         var getByIdResult = await webClient.GetAsync($"/api/hotels/{resultDto.Id}");
         getByIdResult.StatusCode.Should().Be(HttpStatusCode.OK, "we should be able to get the newly created hotel by id");
-        var dtoById = await getByIdResult.Content.ReadAsJsonAsync<HotelDto>();
+        var dtoById = await getByIdResult.Content.ReadAsJsonAsync<HotelDTO>();
         dtoById.Should().BeEquivalentTo(resultDto, "we expect the same result to be returned by a create hotel as what you'd get from get hotel by id");
 
         var getAllRequest = await webClient.GetAsync("/api/hotels");
@@ -101,10 +101,10 @@ internal static class HotelsHelpers
         return resultDto;
     }
 
-    internal static async Task<List<HotelDto>> AssertHotelListAllFunctions(this HttpResponseMessage httpResponse)
+    internal static async Task<List<HotelDTO>> AssertHotelListAllFunctions(this HttpResponseMessage httpResponse)
     {
         httpResponse.StatusCode.Should().Be(HttpStatusCode.OK, "we expect an HTTP 200 when calling GET /api/hotels");
-        var resultDto = await httpResponse.Content.ReadAsJsonAsync<List<HotelDto>>();
+        var resultDto = await httpResponse.Content.ReadAsJsonAsync<List<HotelDTO>>();
         Assert.IsNotNull(resultDto, "We expect json data when calling GET /api/hotels");
         resultDto.Should().HaveCountGreaterThan(2, "we expect at least 3 hotels when calling GET /api/hotels");
         resultDto.All(x => !string.IsNullOrWhiteSpace(x.Name)).Should().BeTrue("we expect all hotels to have names");
@@ -116,10 +116,10 @@ internal static class HotelsHelpers
 
     private sealed class DeleteHotel : IAsyncDisposable
     {
-        private readonly HotelDto request;
+        private readonly HotelDTO request;
         private readonly HttpClient webClient;
 
-        public DeleteHotel(HotelDto request, HttpClient webClient)
+        public DeleteHotel(HotelDTO request, HttpClient webClient)
         {
             this.request = request;
             this.webClient = webClient;
